@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+._*
+
+# Office lock/temp files
+~$*
+
+# Python
+__pycache__/
+*.pyc
+
+# Local tooling
+.claude/settings.local.json
+
+# Saved third-party HTML dumps kept locally for reference, not for the repo
+EHR code/*.html
+EHR code/*.md
+
+# Internal research — kept local, not published
+Research/
+ASTRIA-PITCH-CONTEXT.md

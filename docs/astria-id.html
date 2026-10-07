@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Astria ID — Astria</title>
+<meta name="description" content="An encrypted identifier that resolves a booking number, a Medicaid ID and clinic records to the same person.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;650;700&display=swap">
+<link rel="stylesheet" href="assets/astria.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img class="mark" src="assets/img/logo-icon.png" alt=""><span class="wordmark">ASTRIA</span></a>
+    <nav class="primary" aria-label="Primary"><a href="index.html">Home</a><a href="how-it-works.html">How it works</a><a href="argo.html">Argo</a><a href="astria-id.html" aria-current="page">Astria ID</a><a href="care-promoter.html">Care team</a><a href="network.html">Network</a><a href="coverage.html">Coverage</a><a href="financing.html">Financing</a><a href="implementation.html">Rollout</a><a href="team.html">Team</a></nav>
+  </div>
+</header>
+
+
+<section>
+  <div class="wrap">
+    <span class="eyebrow">Continuity</span>
+    <h1>One identifier that survives the gaps</h1>
+    <p class="lede" style="margin-top:18px">People who cycle between custody, coverage and community care
+    acquire a new identifier at every door. The Astria ID is the key that resolves them back to the same
+    human being.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="demo">
+      <div class="demo-bar">
+        <span class="dot gold"></span><span class="title">Astria ID &mdash; continuity across events</span>
+        <span class="right"><span class="pill" id="id-ctx">Baseline</span></span>
+      </div>
+      <div class="demo-body">
+        <div class="ctrl" style="margin-bottom:22px">
+          <label>Simulate an event:</label>
+          <div class="seg" id="id-seg">
+            <button data-e="0" aria-pressed="true">Baseline</button>
+            <button data-e="1" aria-pressed="false">Loses coverage</button>
+            <button data-e="2" aria-pressed="false">Moves county</button>
+            <button data-e="3" aria-pressed="false">Returns to custody</button>
+          </div>
+        </div>
+        <div class="grid g2" style="gap:26px">
+          <div>
+            <div class="caption" style="margin-bottom:10px">Institutional identifiers</div>
+            <div id="id-list">
+              <div class="field"><span class="k">Booking number</span><span class="v" data-i="0">AL-2291847</span></div>
+              <div class="field"><span class="k">Medicaid ID</span><span class="v" data-i="1">NC 9042118833</span></div>
+              <div class="field"><span class="k">Clinic MRN</span><span class="v" data-i="2">PHS-004512</span></div>
+              <div class="field"><span class="k">Pharmacy record</span><span class="v" data-i="3">GW-88107</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="card dark" style="text-align:center;padding:30px 26px">
+              <svg viewBox="0 0 34 34" style="width:30px;height:30px;margin:0 auto 10px;display:block" aria-hidden="true">
+                <path d="M17 2 L19 12 L29 14 L19 16 L17 26 L15 16 L5 14 L15 12 Z" fill="#E8B85B"/>
+              </svg>
+              <div style="font-family:var(--display);font-weight:800;letter-spacing:.14em;font-size:19px;color:#fff">ASTRIA ID</div>
+              <div class="mono-num" style="font-size:14px;color:#AABEF5;margin-top:6px">AST&ndash;7Q4M&ndash;2XB9</div>
+              <p style="font-size:13.5px;margin-top:14px;color:#9AA6BF">Unchanged across every event on the
+              left. Encrypted, internal, and never visible to corrections, courts, probation or parole.</p>
+            </div>
+            <div class="callout gold" style="margin-top:18px">
+              <p id="id-msg" style="font-size:15px">All four identifiers currently resolve to one person and one
+              continuous record.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="grid g2" style="gap:24px">
+      <div class="card" style="border-color:var(--celestial)">
+        <h3 style="color:var(--celestial-dk)">What it is</h3>
+        <ul class="small" style="margin:12px 0 0;padding-left:20px;line-height:1.9">
+          <li>A private, commercial, system-level identifier, encrypted at rest and in transit</li>
+          <li>A resolver: the same person across a booking number, a Medicaid ID, and clinic records</li>
+          <li>The mechanism that lets a record survive reincarceration, relocation, or a coverage lapse</li>
+          <li>Queryable only by organisations the member has consented to</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:#D8A99A">
+        <h3 style="color:#A8512F">What it is not</h3>
+        <ul class="small" style="margin:12px 0 0;padding-left:20px;line-height:1.9">
+          <li>Not a personal health record, and not a replacement for an EHR</li>
+          <li>Not a government identifier &mdash; federal appropriations language has blocked HHS from issuing one since 1999</li>
+          <li>Not visible or useful to corrections, courts, probation or parole</li>
+          <li>Not a score, a risk tier, or anything that ranks a person</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note" style="margin-top:26px">
+      <strong>A design constraint we hold to</strong>
+      <p>For someone who has just left custody, a permanent identifier that follows you is the precise shape
+      of the thing they have reason to fear. The same object reads as infrastructure or as surveillance
+      depending entirely on who can query it and who controls consent. If we cannot explain that difference
+      to a member in one sentence, we have designed it wrong.</p>
+    </div>
+  </div>
+</section>
+<section class="tight"><div class="wrap"><div class="pagenav"><a href="argo.html"><div class="lbl">Previous</div><div class="t">Argo</div></a><a href="care-promoter.html"><div class="lbl">Next</div><div class="t">Care team</div></a></div></div></section>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <div class="footer-lockup">
+          <img class="mark" src="assets/img/logo-icon-light.png" alt="">
+          <span class="wordmark on-dark">ASTRIA</span>
+        </div>
+        <p style="margin-top:14px;max-width:40ch">Every point of care. One path forward.</p>
+        <p class="caption" style="color:#6E7C99">Intelligent chronic-care navigation and reentry health infrastructure.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <a href="how-it-works.html">How it works</a>
+        <a href="argo.html">Argo — onboarding</a>
+        <a href="astria-id.html">The Astria ID</a>
+        <a href="care-promoter.html">Care Promoters</a>
+        <a href="network.html">Community network</a>
+      </div>
+      <div>
+        <h4>Operating model</h4>
+        <a href="coverage.html">Coverage analysis</a>
+        <a href="financing.html">Financing</a>
+        <a href="implementation.html">Rollout</a>
+        <a href="team.html">Team</a>
+      </div>
+    </div>
+    <p class="fine">Working draft, built by a student team at the University of North Carolina. Figures are sourced
+    on the page where they appear. Coverage analysis is our own, derived from the NC DSH &amp; FQHC Locations 2022
+    workbook and US Census county geography; distances are straight-line county-centroid and should be read as a
+    floor, not drive time. Astria is not yet a deployed service.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var EV=[
+    {ctx:"Baseline", cls:"pill",
+     vals:["AL-2291847","NC 9042118833","PHS-004512","GW-88107"], dim:[],
+     msg:"All four identifiers currently resolve to one person and one continuous record."},
+    {ctx:"Coverage lapsed", cls:"pill gold",
+     vals:["AL-2291847","Inactive at redetermination","PHS-004512","GW-88107"], dim:[1],
+     msg:"Coverage lapsed at redetermination. The Astria ID is unchanged, so the care team sees it the week it happens rather than at the pharmacy counter."},
+    {ctx:"Moved county", cls:"pill gold",
+     vals:["AL-2291847","NC 9042118833","New MRN at receiving clinic","New pharmacy record"], dim:[2,3],
+     msg:"New county, new clinic, new pharmacy &mdash; two new institutional identifiers. The Astria ID resolves them to the same person, so the history travels."},
+    {ctx:"Returned to custody", cls:"pill gold",
+     vals:["New booking number","Suspended during custody","PHS-004512","GW-88107"], dim:[0,1],
+     msg:"A new booking number and suspended coverage. Intake starts from the real history instead of from zero &mdash; which is the single largest source of avoidable harm in this population."}
+  ];
+  var vals=document.querySelectorAll('#id-list .v');
+  var ctx=document.getElementById('id-ctx'), msg=document.getElementById('id-msg');
+  function render(i){
+    var e=EV[i];
+    vals.forEach(function(v,k){
+      v.innerHTML=e.vals[k];
+      v.className='v'+(e.dim.indexOf(k)>-1?' flag':'');
+    });
+    ctx.textContent=e.ctx; ctx.className=e.cls; msg.innerHTML=e.msg;
+  }
+  document.getElementById('id-seg').addEventListener('click',function(ev){
+    var b=ev.target.closest('[data-e]'); if(!b) return;
+    this.querySelectorAll('[data-e]').forEach(function(x){x.setAttribute('aria-pressed','false');});
+    b.setAttribute('aria-pressed','true'); render(+b.dataset.e);
+  });
+})();
+</script>
+</body>
+</html>

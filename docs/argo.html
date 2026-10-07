@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Argo — onboarding — Astria</title>
+<meta name="description" content="Argo turns a fax, a scan or a spreadsheet into a usable care record, and assembles the Medicaid application.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;650;700&display=swap">
+<link rel="stylesheet" href="assets/astria.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img class="mark" src="assets/img/logo-icon.png" alt=""><span class="wordmark">ASTRIA</span></a>
+    <nav class="primary" aria-label="Primary"><a href="index.html">Home</a><a href="how-it-works.html">How it works</a><a href="argo.html" aria-current="page">Argo</a><a href="astria-id.html">Astria ID</a><a href="care-promoter.html">Care team</a><a href="network.html">Network</a><a href="coverage.html">Coverage</a><a href="financing.html">Financing</a><a href="implementation.html">Rollout</a><a href="team.html">Team</a></nav>
+  </div>
+</header>
+
+
+<section>
+  <div class="wrap">
+    <span class="eyebrow">Onboarding</span>
+    <h1>Argo meets facilities where they are</h1>
+    <p class="lede" style="margin-top:18px">Fewer than five percent of state corrections departments can
+    exchange structured medical data. So Astria does not require interoperability that does not exist.
+    Give Argo whatever the facility actually has.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="demo">
+      <div class="demo-bar">
+        <span class="dot"></span><span class="title">Argo &mdash; intake</span>
+        <span class="right"><span class="pill blue" id="argo-state">Awaiting upload</span></span>
+      </div>
+      <div class="demo-body">
+        <div class="grid g2" style="gap:26px">
+          <div>
+            <div class="caption" style="margin-bottom:10px">What the facility sent</div>
+            <div class="filecard">
+              <span class="ico"></span>
+              <span>
+                <span class="nm">alamance_release_packet.pdf</span>
+                <span class="mt">Scanned fax &middot; 6 pages &middot; mixed handwriting</span>
+              </span>
+            </div>
+            <div class="btn-row" style="margin-top:18px">
+              <button class="btn" id="argo-run">Process with Argo</button>
+              <button class="btn ghost" id="argo-reset">Reset</button>
+            </div>
+            <p class="caption" style="margin-top:16px">Illustrative demo with sample data. No real patient
+            information is used anywhere on this site.</p>
+          </div>
+          <div>
+            <div class="caption" style="margin-bottom:10px">Structured record</div>
+            <div id="argo-fields">
+              <div class="field" data-f><span class="k">Name</span><span class="v pending">&mdash;</span></div>
+              <div class="field" data-f><span class="k">Release date</span><span class="v pending">&mdash;</span></div>
+              <div class="field" data-f><span class="k">Conditions</span><span class="v pending">&mdash;</span></div>
+              <div class="field" data-f><span class="k">Medications</span><span class="v pending">&mdash;</span></div>
+              <div class="field" data-f><span class="k">Days of supply</span><span class="v pending">&mdash;</span></div>
+              <div class="field" data-f><span class="k">Coverage</span><span class="v pending">&mdash;</span></div>
+              <div class="field" data-f><span class="k">Contact</span><span class="v pending">&mdash;</span></div>
+              <div class="field" data-f><span class="k">Discharge summary</span><span class="v pending">&mdash;</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">What Argo does</span>
+      <h2>Four moves, in order</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div><h4>Any format in</h4>
+        <p>A fax, a scan, a spreadsheet, a discharge record. No schema, no integration, no minimum quality bar.</p></div></div>
+      <div class="step"><div><h4>Extract to structure</h4>
+        <p>Conditions, medications with days of supply, release date, contacts. Every extracted field keeps a
+        link back to the page it came from, so a clinician can check the source.</p></div></div>
+      <div class="step"><div><h4>Assemble coverage</h4>
+        <p>Argo verifies Medicaid status or assembles the application so a certified assister can submit it.
+        Astria does not submit applications itself — assisting with enrolment is a regulated role.</p></div></div>
+      <div class="step done"><div><h4>Name the gaps</h4>
+        <p>Missing discharge summary, no contact number, release date unconfirmed. Each becomes a chase task
+        with an owner, rather than an empty field somebody discovers later.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="grid g2" style="gap:24px">
+      <div class="card">
+        <h3>Why this matters commercially</h3>
+        <p>A Michigan state analysis found community health workers spend <strong>8.7 hours a week</strong>
+        tracking down resources and making referrals — separate from the 18.5 hours they spend with clients.
+        Across a caseload of twenty-five, that is roughly eighteen hours per client per year on coordination
+        before any care is delivered.</p>
+        <p class="caption">Michigan DHHS / MiCHWA Community Health Worker Caseload Analysis, 2023.</p>
+      </div>
+      <div class="card">
+        <h3>What Argo does not do</h3>
+        <p>It does not contact members directly, make clinical decisions, or appear as a person. It reduces
+        the administrative load — it does not absorb it. Somebody still has to call the housing program and
+        ask whether there is a bed.</p>
+        <p>Every message that reaches a member is sent by a named human who can be reached back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="tight"><div class="wrap"><div class="pagenav"><a href="how-it-works.html"><div class="lbl">Previous</div><div class="t">How it works</div></a><a href="astria-id.html"><div class="lbl">Next</div><div class="t">Astria ID</div></a></div></div></section>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <div class="footer-lockup">
+          <img class="mark" src="assets/img/logo-icon-light.png" alt="">
+          <span class="wordmark on-dark">ASTRIA</span>
+        </div>
+        <p style="margin-top:14px;max-width:40ch">Every point of care. One path forward.</p>
+        <p class="caption" style="color:#6E7C99">Intelligent chronic-care navigation and reentry health infrastructure.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <a href="how-it-works.html">How it works</a>
+        <a href="argo.html">Argo — onboarding</a>
+        <a href="astria-id.html">The Astria ID</a>
+        <a href="care-promoter.html">Care Promoters</a>
+        <a href="network.html">Community network</a>
+      </div>
+      <div>
+        <h4>Operating model</h4>
+        <a href="coverage.html">Coverage analysis</a>
+        <a href="financing.html">Financing</a>
+        <a href="implementation.html">Rollout</a>
+        <a href="team.html">Team</a>
+      </div>
+    </div>
+    <p class="fine">Working draft, built by a student team at the University of North Carolina. Figures are sourced
+    on the page where they appear. Coverage analysis is our own, derived from the NC DSH &amp; FQHC Locations 2022
+    workbook and US Census county geography; distances are straight-line county-centroid and should be read as a
+    floor, not drive time. Astria is not yet a deployed service.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var DATA=[["Name","James T. (sample)"],["Release date","22 September &middot; confirmed"],
+    ["Conditions","Hypertension, type 2 diabetes, opioid use disorder"],
+    ["Medications","Buprenorphine/naloxone, lisinopril, metformin"],
+    ["Days of supply","30 days issued at release"],
+    ["Coverage","Medicaid inactive &mdash; application assembled","flag"],
+    ["Contact","(336) 555&ndash;0148 &middot; backup contact captured"],
+    ["Discharge summary","Not provided &mdash; chase task created","flag"]];
+  var rows=document.querySelectorAll('#argo-fields [data-f]');
+  var state=document.getElementById('argo-state');
+  var t=[];
+  function reset(){
+    t.forEach(clearTimeout); t=[];
+    rows.forEach(function(r){ var v=r.querySelector('.v'); v.className='v pending'; v.innerHTML='&mdash;'; });
+    state.textContent='Awaiting upload'; state.className='pill blue';
+  }
+  document.getElementById('argo-reset').addEventListener('click',reset);
+  document.getElementById('argo-run').addEventListener('click',function(){
+    reset();
+    state.textContent='Reading 6 pages\u2026'; state.className='pill gold';
+    DATA.forEach(function(d,i){
+      t.push(setTimeout(function(){
+        var v=rows[i].querySelector('.v');
+        v.className='v'+(d[2]?' '+d[2]:''); v.innerHTML=d[1];
+        if(i===DATA.length-1){ state.textContent='Record ready \u00b7 2 gaps flagged'; state.className='pill green'; }
+      }, 420+i*260));
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coverage analysis — Astria</title>
+<meta name="description" content="Every FQHC and safety-net hospital in North Carolina, mapped against county geography and travel radius.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;650;700&display=swap">
+<link rel="stylesheet" href="assets/astria.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img class="mark" src="assets/img/logo-icon.png" alt=""><span class="wordmark">ASTRIA</span></a>
+    <nav class="primary" aria-label="Primary"><a href="index.html">Home</a><a href="how-it-works.html">How it works</a><a href="argo.html">Argo</a><a href="astria-id.html">Astria ID</a><a href="care-promoter.html">Care team</a><a href="network.html">Network</a><a href="coverage.html" aria-current="page">Coverage</a><a href="financing.html">Financing</a><a href="implementation.html">Rollout</a><a href="team.html">Team</a></nav>
+  </div>
+</header>
+
+
+<section>
+  <div class="wrap">
+    <span class="eyebrow">Proof of concept &mdash; North Carolina</span>
+    <h1>We mapped the whole state</h1>
+    <p class="lede" style="margin-top:18px">A matching engine is only as good as the supply it matches into.
+    So before specifying the product, we mapped every federally qualified health center and safety-net
+    hospital in North Carolina against county geography and population.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="grid g4" id="cov-stats"></div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="demo">
+      <div class="demo-bar">
+        <span class="dot"></span><span class="title">North Carolina &mdash; care access</span>
+        <span class="right"><span class="pill blue" id="cov-mode">Health centres per county</span></span>
+      </div>
+      <div class="demo-body">
+        <div class="ctrl">
+          <div class="seg" id="cov-seg">
+            <button data-m="fq" aria-pressed="true">Health centres</button>
+            <button data-m="all" aria-pressed="false">All facilities</button>
+            <button data-m="radius" aria-pressed="false">Travel radius</button>
+          </div>
+          <label for="cov-rad">Radius</label>
+          <input type="range" id="cov-rad" min="5" max="60" step="5" value="15">
+          <span class="mono-num" id="cov-radv" style="font-weight:700;min-width:58px">15 mi</span>
+        </div>
+        <svg id="map" role="img" aria-label="Map of North Carolina counties by health centre access"></svg>
+        <div class="legend" id="cov-legend"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="grid g2" style="gap:24px">
+      <div class="card">
+        <h3>The finding that shaped the product</h3>
+        <p>No county in North Carolina is more than <strong>31 miles</strong> from a county that has a federally
+        qualified health center. We modelled the network: <strong>24 anchor sites</strong> would place all 100
+        counties within a 35-mile radius.</p>
+        <p>The infrastructure to reach the whole state largely exists. What is missing is the layer that
+        connects it — which is why Astria is a navigation system rather than a clinic.</p>
+      </div>
+      <div class="card">
+        <h3>And the finding that constrains it</h3>
+        <p>At <strong>15 miles</strong> — a realistic limit for someone without a car in their first month out
+        — fourteen counties and roughly <strong>734,000 people</strong> fall outside reach. Access in North
+        Carolina is not primarily a facility problem. It is a transport problem wearing a facility problem's
+        clothes.</p>
+        <p>That is why a Care Promoter who can work by phone or video is a design requirement, not a
+        convenience.</p>
+      </div>
+    </div>
+    <div class="note" style="margin-top:26px">
+      <strong>How to read these numbers</strong>
+      <p>Distances are straight-line, county-centroid to county-centroid. Treat every one as a floor rather
+      than a drive time — Dare County, on the Outer Banks, is the clearest case where the number flatters
+      reality. We do not yet hold a population or vehicle-access layer, so a large rural county and a dense
+      small one look alike here. Source data is the NC DSH &amp; FQHC Locations 2022 workbook; four county
+      names were misspelled in the source and corrected on load.</p>
+    </div>
+  </div>
+</section>
+<section class="tight"><div class="wrap"><div class="pagenav"><a href="network.html"><div class="lbl">Previous</div><div class="t">Network</div></a><a href="financing.html"><div class="lbl">Next</div><div class="t">Financing</div></a></div></div></section>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <div class="footer-lockup">
+          <img class="mark" src="assets/img/logo-icon-light.png" alt="">
+          <span class="wordmark on-dark">ASTRIA</span>
+        </div>
+        <p style="margin-top:14px;max-width:40ch">Every point of care. One path forward.</p>
+        <p class="caption" style="color:#6E7C99">Intelligent chronic-care navigation and reentry health infrastructure.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <a href="how-it-works.html">How it works</a>
+        <a href="argo.html">Argo — onboarding</a>
+        <a href="astria-id.html">The Astria ID</a>
+        <a href="care-promoter.html">Care Promoters</a>
+        <a href="network.html">Community network</a>
+      </div>
+      <div>
+        <h4>Operating model</h4>
+        <a href="coverage.html">Coverage analysis</a>
+        <a href="financing.html">Financing</a>
+        <a href="implementation.html">Rollout</a>
+        <a href="team.html">Team</a>
+      </div>
+    </div>
+    <p class="fine">Working draft, built by a student team at the University of North Carolina. Figures are sourced
+    on the page where they appear. Coverage analysis is our own, derived from the NC DSH &amp; FQHC Locations 2022
+    workbook and US Census county geography; distances are straight-line county-centroid and should be read as a
+    floor, not drive time. Astria is not yet a deployed service.</p>
+  </div>
+</footer>
+
+<script>
+fetch('assets/ncdata.json').then(function(r){return r.json();}).then(function(D){
+  var C=D.counties, T=D.totals;
+  C.forEach(function(c){ c.tot=c.fq+c.dsh; });
+
+  var lons=[],lats=[];
+  C.forEach(function(c){ c.polys.forEach(function(p){ p[0].forEach(function(pt){ lons.push(pt[0]); lats.push(pt[1]); }); }); });
+  var minx=Math.min.apply(null,lons), maxx=Math.max.apply(null,lons),
+      miny=Math.min.apply(null,lats), maxy=Math.max.apply(null,lats);
+  var k=Math.cos((miny+maxy)/2*Math.PI/180), Wv=1000, pad=8;
+  var sx=(Wv-2*pad)/((maxx-minx)*k), Hv=(maxy-miny)*sx+2*pad;
+  function px(l){return pad+(l-minx)*k*sx;} function py(l){return Hv-pad-(l-miny)*sx;}
+  var svg=document.getElementById('map');
+  svg.setAttribute('viewBox','0 0 '+Wv+' '+Math.round(Hv));
+  C.forEach(function(c){
+    var d='';
+    c.polys.forEach(function(poly){ poly.forEach(function(ring){
+      ring.forEach(function(pt,i){ d+=(i?'L':'M')+px(pt[0]).toFixed(1)+' '+py(pt[1]).toFixed(1); }); d+='Z'; }); });
+    c.d=d;
+  });
+
+  function hav(a,b,c2,d2){
+    var R=3958.8,p1=b*Math.PI/180,p2=d2*Math.PI/180;
+    var x=Math.pow(Math.sin((p2-p1)/2),2)+Math.cos(p1)*Math.cos(p2)*Math.pow(Math.sin((c2-a)*Math.PI/180/2),2);
+    return 2*R*Math.asin(Math.sqrt(x));
+  }
+  var wf=C.filter(function(c){return c.fq>0;});
+  C.forEach(function(a){ a.near = a.fq>0 ? 0 : Math.min.apply(null, wf.map(function(b){return hav(a.cx,a.cy,b.cx,b.cy);})); });
+
+  var RAMP=['#DCE4FA','#AABEF5','#7E9BEF','#4776E6','#3862CB','#28478F'];
+  var GAP='#C9705A';
+  var metric='fq', radius=15;
+  var MAXFQ=Math.max.apply(null,C.map(function(c){return c.fq;}));
+  var MAXTOT=Math.max.apply(null,C.map(function(c){return c.tot;}));
+
+  function fill(c){
+    if(metric==='radius') return c.near<=radius ? RAMP[2] : GAP;
+    var v = metric==='fq'? c.fq : c.tot;
+    if(v===0) return GAP;
+    var mx = metric==='fq'? MAXFQ : MAXTOT;
+    return RAMP[Math.min(RAMP.length-1, 1+Math.floor(v/mx*(RAMP.length-2)))];
+  }
+  function draw(){
+    svg.innerHTML = C.map(function(c,i){
+      return '<path class="cty" d="'+c.d+'" fill="'+fill(c)+'" data-i="'+i+'"><title>'+c.name+'</title></path>';
+    }).join('');
+    var L=document.getElementById('cov-legend');
+    if(metric==='radius'){
+      L.innerHTML='<span><i style="background:'+RAMP[2]+'"></i>health centre county within '+radius+' mi</span>'
+                 +'<span><i style="background:'+GAP+'"></i>none within '+radius+' mi</span>';
+    } else {
+      L.innerHTML='<span><i style="background:'+GAP+'"></i>none</span><span>then</span>'
+        +RAMP.slice(1).map(function(c){return '<span><i style="background:'+c+'"></i></span>';}).join('')
+        +'<span>fewer &rarr; more</span>';
+    }
+  }
+  function stats(){
+    var out=C.filter(function(c){return c.near>radius;});
+    document.getElementById('cov-stats').innerHTML=[
+      ['288','facilities mapped statewide','171 health centres &middot; 117 safety-net hospitals',''],
+      ['18','counties with no health centre','of 100 &mdash; 6 have neither kind',''],
+      [out.length,'counties outside '+radius+' miles','no health-centre county within range','accent'],
+      ['24','anchor sites cover all 100 counties','within a 35-mile radius','accent']
+    ].map(function(t){
+      return '<div class="stat '+t[3]+'"><div class="v mono-num">'+t[0]+'</div><div class="k">'+t[1]
+        +'</div><div class="src">'+t[2]+'</div></div>';
+    }).join('');
+  }
+
+  var tip=document.createElement('div'); tip.id='tip'; document.body.appendChild(tip);
+  svg.addEventListener('mousemove',function(e){
+    var p=e.target.closest('.cty'); if(!p){ tip.style.opacity=0; return; }
+    var c=C[+p.dataset.i];
+    tip.innerHTML='<b>'+c.name+' County</b><br>'+c.fq+' health centres &middot; '+c.dsh+' hospitals'
+      +(c.fq===0?'<br>nearest health-centre county '+c.near.toFixed(0)+' mi':'');
+    tip.style.opacity=1;
+    tip.style.left=Math.min(e.clientX+14, innerWidth-280)+'px';
+    tip.style.top=(e.clientY+16)+'px';
+  });
+  svg.addEventListener('mouseleave',function(){ tip.style.opacity=0; });
+
+  document.getElementById('cov-seg').addEventListener('click',function(e){
+    var b=e.target.closest('[data-m]'); if(!b) return;
+    this.querySelectorAll('[data-m]').forEach(function(x){x.setAttribute('aria-pressed','false');});
+    b.setAttribute('aria-pressed','true'); metric=b.dataset.m;
+    document.getElementById('cov-mode').textContent =
+      {fq:'Health centres per county',all:'All facilities per county',radius:'Within '+radius+' miles'}[metric];
+    draw();
+  });
+  var rad=document.getElementById('cov-rad');
+  rad.addEventListener('input',function(){
+    radius=+rad.value; document.getElementById('cov-radv').textContent=radius+' mi';
+    if(metric==='radius') document.getElementById('cov-mode').textContent='Within '+radius+' miles';
+    draw(); stats();
+  });
+
+  draw(); stats();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,586 @@
+<title>Astria Implementation Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --plane:#F8F7F4; --surface:#FFFFFF; --surface-2:#F0EFEA;
+  --ink:#131D1C; --ink-2:#36474A; --muted:#64757A; --faint:#9AA7AB;
+  --line:#E3E0D8; --line-2:#CFCBC0;
+  --night:#141E38; --night-2:#1E2A48;
+  --gold:#A8761B; --gold-b:#D99A2B; --gold-t:#FAF0DC;
+  --teal:#0E6E62; --teal-b:#4FBFAC; --teal-t:#E0EFEC;
+  --coral:#A8422A; --coral-b:#E08A6C; --coral-t:#FAE9E3;
+  --s1:#cde2fb; --s2:#9ec5f4; --s3:#6da7ec; --s4:#3987e5; --s5:#256abf; --s6:#184f95;
+  --ice:#C6D4E6; --dim:#8FA2BC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --plane:#0E1415; --surface:#161F20; --surface-2:#1E292A;
+  --ink:#ECF1F0; --ink-2:#C3CFCE; --muted:#93A3A5; --faint:#6F8083;
+  --line:#26312F; --line-2:#3A4846;
+  --gold:#D9A94E; --gold-b:#E8BE6B; --gold-t:#2A2113;
+  --teal:#4FBFAC; --teal-b:#6FD4C1; --teal-t:#102E2A;
+  --coral:#E0917B; --coral-b:#EFAE9B; --coral-t:#2C1B15;
+  --s1:#0d366b; --s2:#184f95; --s3:#256abf; --s4:#3987e5; --s5:#5598e7; --s6:#86b6ef;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --plane:#0E1415; --surface:#161F20; --surface-2:#1E292A;
+  --ink:#ECF1F0; --ink-2:#C3CFCE; --muted:#93A3A5; --faint:#6F8083;
+  --line:#26312F; --line-2:#3A4846;
+  --gold:#D9A94E; --gold-b:#E8BE6B; --gold-t:#2A2113;
+  --teal:#4FBFAC; --teal-b:#6FD4C1; --teal-t:#102E2A;
+  --coral:#E0917B; --coral-b:#EFAE9B; --coral-t:#2C1B15;
+  --s1:#0d366b; --s2:#184f95; --s3:#256abf; --s4:#3987e5; --s5:#5598e7; --s6:#86b6ef;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--plane);color:var(--ink);
+  font-family:"Plus Jakarta Sans",ui-sans-serif,system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:22px}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+a{color:var(--teal)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:5px}
+
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.02em;line-height:1.15}
+h1{font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:clamp(32px,5.4vw,54px)}
+h2{font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:clamp(25px,3.4vw,34px)}
+h3{font-size:17px;font-weight:700;letter-spacing:-.01em}
+p{margin:0 0 .9em}
+.lede{font-size:clamp(17px,2vw,19px);color:var(--ink-2);line-height:1.55}
+
+section{padding-block:56px;border-top:1px solid var(--line)}
+.sn{font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--gold);display:block;margin-bottom:13px}
+.dark{background:var(--night);color:#EEF2F7;border-top:0}
+.dark h2,.dark h3{color:#fff} .dark .lede{color:var(--ice)} .dark .sn{color:var(--gold-b)}
+.dark p{color:var(--ice)}
+
+/* nav */
+nav.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--plane) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;gap:4px;align-items:center;padding-block:9px;overflow-x:auto}
+nav.top b{font-size:14.5px;font-weight:800;letter-spacing:-.02em;margin-right:12px;white-space:nowrap}
+nav.top a{font-size:12.5px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 9px;border-radius:7px;white-space:nowrap}
+nav.top a:hover{background:var(--surface-2);color:var(--ink)}
+
+/* hero */
+.hero{background:var(--night);color:#fff;padding-block:64px 56px}
+.hero h1{color:#fff;max-width:17ch}
+.hero .kick{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-b);margin-bottom:22px}
+.hero .sub{font-size:clamp(16px,2vw,19px);color:var(--ice);max-width:62ch;margin-top:20px;line-height:1.55}
+.hero .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.hero .row span{font-size:12.5px;font-weight:650;padding:6px 13px;border-radius:99px;background:rgba(255,255,255,.08);color:var(--ice)}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:22px}
+.dark .card{background:var(--night-2);border-color:#2B3A5C}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+@media (max-width:900px){.g3,.g4{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+.tag{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;padding:3px 8px;border-radius:5px;background:var(--surface-2);color:var(--muted)}
+.tag.ai{background:var(--gold-t);color:var(--gold)}
+.tag.hu{background:var(--teal-t);color:var(--teal)}
+.tag.no{background:var(--coral-t);color:var(--coral)}
+
+ul.c{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+ul.c li{padding-left:24px;position:relative;font-size:15px}
+ul.c li::before{content:"";position:absolute;left:4px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--teal)}
+.dark ul.c li{color:var(--ice)} .dark ul.c li::before{background:var(--gold-b)}
+
+/* stat tiles */
+.tile .k{font-size:11.5px;font-weight:600;color:var(--muted)}
+.tile .v{font-size:34px;font-weight:800;letter-spacing:-.04em;margin-top:5px;line-height:1}
+.tile .s{font-size:11.5px;color:var(--faint);margin-top:6px}
+.tile.alert .v{color:var(--coral)}
+
+/* county strip */
+.strip{display:flex;flex-wrap:wrap;gap:3px;margin-top:18px}
+.cw{width:26px;height:26px;border-radius:4px;position:relative;cursor:default}
+.cw:hover{outline:2px solid var(--ink);outline-offset:1px}
+.striplegend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;font-size:11.5px;font-weight:600;color:var(--muted);align-items:center}
+.striplegend i{width:11px;height:11px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px}
+
+/* swimlane */
+.lanes{overflow-x:auto;margin-top:22px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.lane-grid{min-width:880px}
+.lrow{display:grid;grid-template-columns:134px repeat(5,1fr);border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:0}
+.lrow.head{background:var(--surface-2)}
+.lrow.head div{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);font-weight:600;padding:11px 12px}
+.lrow .who{font-size:12.5px;font-weight:700;padding:14px 12px;border-right:1px solid var(--line);color:var(--ink)}
+.lrow .cell{padding:12px;font-size:12.5px;color:var(--ink-2);border-right:1px solid var(--line);line-height:1.45}
+.lrow .cell:last-child{border-right:0}
+.lrow .cell.on{background:var(--teal-t)}
+.lrow .cell.ai{background:var(--gold-t)}
+.lrow .cell em{font-style:normal;display:block;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:3px}
+
+/* steps */
+.steps{display:flex;flex-direction:column;gap:11px;margin-top:20px}
+.step{display:grid;grid-template-columns:34px minmax(0,1fr);gap:15px;align-items:start;
+  background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:16px 18px}
+.dark .step{background:var(--night-2);border-color:#2B3A5C}
+.step .n{width:30px;height:30px;border-radius:9px;background:var(--teal-t);color:var(--teal);
+  display:grid;place-items:center;font-size:13px;font-weight:800;font-family:"JetBrains Mono",monospace}
+.dark .step .n{background:#10302C;color:var(--teal-b)}
+.step b{display:block;font-size:15.5px;font-weight:700;margin-bottom:3px}
+.step span{font-size:14px;color:var(--muted)}
+.dark .step span{color:var(--dim)} .dark .step b{color:#fff}
+
+/* cadence */
+.cad{display:flex;gap:4px;align-items:flex-end;margin-top:8px}
+.cad i{width:9px;border-radius:2px;display:block;background:var(--teal)}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:var(--surface);margin-top:18px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);
+  font-weight:600;background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+td b{font-weight:700}
+td.r{text-align:right;font-family:"JetBrains Mono",monospace}
+
+.flag{background:var(--gold-t);border:1px solid var(--gold);border-radius:14px;padding:19px 22px;margin-top:22px}
+.flag b{display:block;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.flag p,.flag li{font-size:14.5px;color:var(--ink-2)}
+.flag ul{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:6px}
+
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;background:var(--ink);color:var(--plane);
+  padding:7px 11px;border-radius:8px;font-size:12px;font-weight:600;z-index:70;white-space:nowrap}
+footer{background:var(--night);color:var(--dim);padding-block:40px;font-size:13px}
+footer a{color:var(--gold-b)}
+</style>
+
+<nav class="top"><div class="wrap">
+  <b>Astria</b>
+  <a href="#model">Model</a><a href="#left-out">Who's left out</a><a href="#journey">Journey</a>
+  <a href="#onboard">Onboarding</a><a href="#id">The ID</a><a href="#team">Care team</a>
+  <a href="#continuity">Continuity</a><a href="#tiers">Tiers</a><a href="#cases">Counties</a>
+  <a href="#implement">Implementation</a><a href="#unknowns">Unknowns</a>
+</div></nav>
+
+<div class="hero"><div class="wrap">
+  <div class="kick">Implementation overview · working draft</div>
+  <h1>Nobody leaves without a team, an ID, and someone checking.</h1>
+  <p class="sub">Astria is a care navigation platform for people leaving incarceration. It onboards them before release from whatever records exist, resolves coverage, assembles an integrated care team around them, and then keeps checking — at a cadence that relaxes only as the connection proves durable.</p>
+  <div class="row"><span>County health departments</span><span>Health systems</span><span>State Medicaid</span><span>Reentry programmes</span></div>
+</div></div>
+
+<!-- ================= MODEL ================= -->
+<section id="model"><div class="wrap">
+  <span class="sn">01 · the model</span>
+  <h2>Three things, in order</h2>
+  <p class="lede" style="max-width:66ch;margin-top:14px">Everything Astria does falls into one of three stages. Each has a different mix of software, AI and human work — and the balance shifts deliberately as you move right.</p>
+  <div class="g3" style="margin-top:26px">
+    <div class="card">
+      <span class="tag ai">Mostly automated</span>
+      <h3 style="margin-top:12px">1 · Onboard</h3>
+      <p style="margin-top:9px;font-size:14.5px;color:var(--muted)">The facility uploads whatever it has. Astria extracts it, assigns an Astria ID, resolves coverage, and produces a usable starting record — even an incomplete one.</p>
+    </div>
+    <div class="card">
+      <span class="tag ai">Assisted matching</span>
+      <h3 style="margin-top:12px">2 · Assemble</h3>
+      <p style="margin-top:9px;font-size:14.5px;color:var(--muted)">Match to a clinic of record that takes Medicaid and takes this population, plus behavioural health where indicated. Show plainly what the county does not have.</p>
+    </div>
+    <div class="card">
+      <span class="tag hu">Human, supported</span>
+      <h3 style="margin-top:12px">3 · Hold on</h3>
+      <p style="margin-top:9px;font-size:14.5px;color:var(--muted)">An Astria community health worker makes contact and keeps it. Cadence starts weekly and relaxes only as the connection proves real. Silence pulls it tight again.</p>
+    </div>
+  </div>
+  <div class="flag">
+    <b>The one design rule</b>
+    <p style="margin:0">AI compresses the administrative work so a human can do the relational work more often — never so a human does it less. Every message that reaches a patient is sent by a named person who can be reached back.</p>
+  </div>
+</div></section>
+
+<!-- ================= LEFT OUT ================= -->
+<section id="left-out"><div class="wrap">
+  <span class="sn">02 · who gets left out</span>
+  <h2>Where there is nobody to be matched to</h2>
+  <p class="lede" style="max-width:68ch;margin-top:14px">Every federally qualified health centre and safety-net hospital in North Carolina, 2022. A matching engine is only as good as the supply it matches into — so this is the constraint the product has to be designed around, not a slide about need.</p>
+
+  <div class="g4" style="margin-top:24px">
+    <div class="card tile"><div class="k">Facilities statewide</div><div class="v mono">288</div><div class="s">171 FQHC · 117 DSH</div></div>
+    <div class="card tile alert"><div class="k">Counties with no FQHC</div><div class="v mono">18</div><div class="s">of 100</div></div>
+    <div class="card tile alert"><div class="k">Counties with neither</div><div class="v mono">6</div><div class="s">no FQHC, no safety-net hospital</div></div>
+    <div class="card tile"><div class="k">Furthest county</div><div class="v mono">30.5<span style="font-size:17px"> mi</span></div><div class="s">Dare — straight line, not drive time</div></div>
+  </div>
+
+  <h3 style="margin-top:34px">All 100 counties, fewest facilities first</h3>
+  <div class="strip" id="strip"></div>
+  <div class="striplegend">
+    <span><i style="background:var(--coral)"></i>no facility at all</span>
+    <span><i style="background:var(--s2)"></i>1–2</span>
+    <span><i style="background:var(--s4)"></i>3–5</span>
+    <span><i style="background:var(--s6)"></i>6+</span>
+    <span style="color:var(--faint)">hover for the county</span>
+  </div>
+
+  <div class="g2" style="margin-top:28px">
+    <div class="card">
+      <h3>The cliff that matters</h3>
+      <p style="margin-top:9px;font-size:14.5px;color:var(--muted)">At a 40-mile radius, no county is stranded. At 25 miles, two are. At <b style="color:var(--ink)">15 miles — a realistic limit for someone with no car — 14 counties have no health centre within reach.</b></p>
+      <p style="margin:0;font-size:14.5px;color:var(--muted)">Access in North Carolina is not a facility problem. It is a transport problem wearing a facility problem's clothes.</p>
+    </div>
+    <div class="card">
+      <h3>Layers we do not have yet</h3>
+      <ul class="c" style="margin-top:10px;font-size:14px">
+        <li><b>Which providers take Medicaid</b> — and, harder, which take <em>new</em> Medicaid patients. Directory data is notoriously unreliable.</li>
+        <li><b>Buprenorphine prescribing capacity</b> by county.</li>
+        <li><b>Behavioural health and OB capacity</b> — provider density, not facility presence.</li>
+        <li><b>Population and vehicle access</b> — a big empty county and a dense small one look identical above.</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:18px;font-size:13px;color:var(--faint)">Source: NC DSH &amp; FQHC Locations 2022 workbook; county geography from US Census. Distances are centroid-to-centroid and should be read as a best case. Four county names were misspelled in the source and corrected on load.</p>
+</div></section>
+
+<!-- ================= JOURNEY ================= -->
+<section id="journey" class="dark"><div class="wrap">
+  <span class="sn">03 · the journey</span>
+  <h2>One person, ninety days before to a year after</h2>
+  <p class="lede" style="max-width:66ch;margin-top:14px">Who does what, and when. The shaded cells are where Astria acts: gold is automated, green is a human we employ.</p>
+
+  <div class="lanes"><div class="lane-grid">
+    <div class="lrow head"><div>Actor</div><div>Day −90 to −14</div><div>Day −14 to 0</div><div>Day 0–30</div><div>Day 30–180</div><div>Day 180+</div></div>
+
+    <div class="lrow"><div class="who">Facility<br><span style="font-weight:500;color:var(--muted);font-size:11px">jail or prison</span></div>
+      <div class="cell">Identifies someone approaching release. Uploads whatever health and programme records exist — scan, fax, PDF, spreadsheet.</div>
+      <div class="cell">Confirms release date if known. Issues the 30-day medication supply required under the demonstration.</div>
+      <div class="cell" style="color:var(--faint)">Out of the picture.</div>
+      <div class="cell" style="color:var(--faint)">—</div>
+      <div class="cell" style="color:var(--faint)">—</div></div>
+
+    <div class="lrow"><div class="who">Astria<br><span style="font-weight:500;color:var(--muted);font-size:11px">platform</span></div>
+      <div class="cell ai"><em>automated</em>Extracts the upload. Assigns an Astria ID. Checks Medicaid status and starts the application if needed. Flags what is missing.</div>
+      <div class="cell ai"><em>automated</em>Matches to a clinic of record and behavioural health. Builds the handoff packet. Pre-writes the first messages.</div>
+      <div class="cell ai"><em>automated</em>Watches for the first fill and the first visit. Escalates on silence.</div>
+      <div class="cell ai"><em>automated</em>Watches coverage, redetermination, fills, visits. Adjusts cadence from the signals.</div>
+      <div class="cell ai"><em>automated</em>Quiet. Fires only on a broken signal or an approaching cliff.</div></div>
+
+    <div class="lrow"><div class="who">CHW<br><span style="font-weight:500;color:var(--muted);font-size:11px">Astria staff</span></div>
+      <div class="cell on"><em>human</em>Where access allows: an in-reach call or visit. Introduces herself before release so day 0 is not a cold start.</div>
+      <div class="cell on"><em>human</em>Confirms a phone, a backup contact, and where he is going.</div>
+      <div class="cell on"><em>human</em>Meets him. Weekly contact. Accompanies the first visit if he wants.</div>
+      <div class="cell on"><em>human</em>Monthly once things hold. Re-tightens whenever Astria says so.</div>
+      <div class="cell on"><em>human</em>Quarterly, then yearly. Still reachable by text.</div></div>
+
+    <div class="lrow"><div class="who">Clinic<br><span style="font-weight:500;color:var(--muted);font-size:11px">partner of record</span></div>
+      <div class="cell" style="color:var(--faint)">—</div>
+      <div class="cell">Accepts the referral and puts him on a panel. This is the ownership transfer.</div>
+      <div class="cell">First visit inside 30 days. Medications reconciled and continued.</div>
+      <div class="cell">Ongoing care. Behavioural health integrated where available.</div>
+      <div class="cell">He is now an ordinary established patient. That is the goal.</div></div>
+
+    <div class="lrow"><div class="who">Him</div>
+      <div class="cell">Consents. Says where he is going and who to call if his number changes.</div>
+      <div class="cell">Has a name and a number for a real person.</div>
+      <div class="cell">Texts. Shows up, or doesn't — and if he doesn't, somebody notices the same week.</div>
+      <div class="cell">Fewer check-ins as things hold. Nothing is asked of him that he has to maintain.</div>
+      <div class="cell">Still on a panel. Still covered. Nobody is calling him unless something slips.</div></div>
+  </div></div>
+</div></section>
+
+<!-- ================= ONBOARDING ================= -->
+<section id="onboard"><div class="wrap">
+  <span class="sn">04 · onboarding</span>
+  <h2>Give us whatever you have</h2>
+  <p class="lede" style="max-width:68ch;margin-top:14px">The design constraint is that fewer than one in twenty state corrections systems can exchange structured medical data. So the intake path is a document pipeline, not an integration — and a partial record is an acceptable, expected output.</p>
+
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div><b>Upload</b><span>A reentry coordinator, jail health nurse, or a CHW we place uploads what exists: discharge summary, medication list, programme participation, release date. Scan, fax, PDF, spreadsheet. No format requirement.</span></div></div>
+    <div class="step"><div class="n">2</div><div><b>Extract and normalise</b><span>Astria parses it into structured fields — conditions, medications with days of supply, allergies, contacts, release date, programme history. Every field keeps a link back to the page it came from, so a clinician can check the source.</span></div></div>
+    <div class="step"><div class="n">3</div><div><b>Assign the Astria ID</b><span>A persistent internal identifier that links this person's jail booking number, Medicaid ID and future clinic record numbers. See the next section for what it is and is not.</span></div></div>
+    <div class="step"><div class="n">4</div><div><b>Resolve coverage</b><span>Check Medicaid status. If inactive or absent, start the application inside the pre-release window. Coverage active on release day is the single highest-value output of onboarding.</span></div></div>
+    <div class="step"><div class="n">5</div><div><b>Name the gaps</b><span>The record is shown with holes visible rather than hidden — missing discharge summary, no contact number, release date unconfirmed. Each gap becomes a chase task with an owner, not a blank field.</span></div></div>
+    <div class="step"><div class="n">6</div><div><b>Hand to a human</b><span>A CHW gets a prepared file and a short list of what to confirm. She is not doing data entry; she is doing the part that needs a person.</span></div></div>
+  </div>
+
+  <div class="g2" style="margin-top:26px">
+    <div class="card">
+      <h3>Two legal routes in</h3>
+      <p style="margin-top:9px;font-size:14.5px;color:var(--muted)"><b style="color:var(--ink)">BAA</b> — the county or its health vendor treats Astria as a business associate and discloses for treatment or operations. Fast, scoped to that county.</p>
+      <p style="margin:0;font-size:14.5px;color:var(--muted)"><b style="color:var(--ink)">Patient authorisation</b> — signed pre-release, which makes the record portable after release and is what lets it follow him. Needs careful handling: consent obtained inside carries real questions about voluntariness.</p>
+    </div>
+    <div class="card">
+      <h3>When there is no pre-release window</h3>
+      <p style="margin-top:9px;font-size:14.5px;color:var(--muted)">Jails frequently release with little or no notice. The same pipeline runs <b style="color:var(--ink)">post-release</b>: someone walks into a partner organisation on day 4, and onboarding starts there with whatever he is carrying — often a discharge paper and a pill bottle.</p>
+      <p style="margin:0;font-size:14.5px;color:var(--muted)">Designing for zero notice is not a fallback. For jails it is the primary path.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ================= ID ================= -->
+<section id="id"><div class="wrap">
+  <span class="sn">05 · the astria id</span>
+  <h2>A linking key, not a medical record</h2>
+  <div class="g2" style="margin-top:22px">
+    <div class="card" style="border-color:var(--teal)">
+      <h3 style="color:var(--teal)">What it is</h3>
+      <ul class="c" style="margin-top:12px;font-size:14.5px">
+        <li>A private, commercial, system-level identifier — encrypted at rest and in transit</li>
+        <li>A resolver: the same human across a booking number, a Medicaid ID and three clinic record numbers</li>
+        <li>The thing that lets a record survive reincarceration, a move, or a coverage lapse</li>
+        <li>Queryable only by organisations the person has consented to</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:var(--coral)">
+      <h3 style="color:var(--coral)">What it is not</h3>
+      <ul class="c" style="margin-top:12px;font-size:14.5px">
+        <li>Not a universal personal health record, and not a replacement for an EHR</li>
+        <li>Not a government identifier — a federal appropriations rider has blocked HHS from issuing one since 1999</li>
+        <li>Not visible or useful to corrections, courts, probation or parole. Ever.</li>
+        <li>Not a score, a risk tier, or anything that ranks a person</li>
+      </ul>
+    </div>
+  </div>
+  <div class="flag">
+    <b>Say this out loud in every user interview</b>
+    <p style="margin:0">For someone who has just left custody, a permanent identifier that follows you is the precise shape of the thing they fear. The same object feels like infrastructure or like surveillance depending entirely on who can query it and who controls the consent. If we cannot explain the difference in one sentence to a patient, we have designed it wrong.</p>
+  </div>
+</div></section>
+
+<!-- ================= TEAM ================= -->
+<section id="team" class="dark"><div class="wrap">
+  <span class="sn">06 · assembling the care team</span>
+  <h2>A baseline that exists, and a wishlist that is honest</h2>
+  <p class="lede" style="max-width:66ch;margin-top:14px">The team is built in layers. The first layer must be real in every county we operate in. The outer layers are shown as available or not — because pretending a county has a nutritionist does not produce one.</p>
+
+  <div class="g3" style="margin-top:26px">
+    <div class="card">
+      <span class="tag hu">Layer 1 — required</span>
+      <h3 style="margin-top:12px">The baseline</h3>
+      <ul class="c" style="margin-top:12px;font-size:14px">
+        <li>A clinic of record that takes Medicaid and takes this population</li>
+        <li>Behavioural health or SUD treatment where clinically indicated</li>
+        <li>An Astria community health worker</li>
+      </ul>
+      <p style="margin:12px 0 0;font-size:13px;color:var(--dim)">If layer 1 cannot be assembled, we do not enrol. Saying no is part of the product.</p>
+    </div>
+    <div class="card">
+      <span class="tag ai">Layer 2 — where it exists</span>
+      <h3 style="margin-top:12px">Integrated</h3>
+      <ul class="c" style="margin-top:12px;font-size:14px">
+        <li>Pharmacy and medication management</li>
+        <li>Behavioural medicine integrated into primary care</li>
+        <li>Obstetric and reproductive care</li>
+        <li>Care coordinator at the clinic</li>
+      </ul>
+      <p style="margin:12px 0 0;font-size:13px;color:var(--dim)">Billable today in most states. Availability varies sharply by county.</p>
+    </div>
+    <div class="card">
+      <span class="tag no">Layer 3 — aspirational</span>
+      <h3 style="margin-top:12px">Lifestyle</h3>
+      <ul class="c" style="margin-top:12px;font-size:14px">
+        <li>Nutrition and medical nutrition therapy</li>
+        <li>Lifestyle medicine</li>
+        <li>Physical and occupational therapy</li>
+        <li>Group and peer programming</li>
+      </ul>
+      <p style="margin:12px 0 0;font-size:13px;color:var(--dim)">Thin or absent reimbursement today. We build the slot, measure the need, and use it to argue for a value-based arrangement — rather than claim it is covered.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3>When the match fails</h3>
+    <p style="margin-top:9px;color:var(--ice);font-size:14.5px">Eighteen North Carolina counties have no health centre. The honest product behaviour, in order: <b style="color:#fff">1.</b> widen the search radius and show the real travel burden; <b style="color:#fff">2.</b> route to a telehealth prescriber for medication continuity where law permits; <b style="color:#fff">3.</b> record the unmet need against that county so the gap becomes evidence rather than a silent failure. We do not enrol someone into a team that does not exist.</p>
+  </div>
+</div></section>
+
+<!-- ================= CONTINUITY ================= -->
+<section id="continuity"><div class="wrap">
+  <span class="sn">07 · continuity</span>
+  <h2>The cadence relaxes. It never ends.</h2>
+  <p class="lede" style="max-width:68ch;margin-top:14px">Confidence in someone's continuity is built from signals, not from asking how they are: a prescription filled, a visit attended, coverage still active, a clinic confirming they are on the panel, a message answered. The contact schedule is a function of that confidence.</p>
+
+  <div class="g4" style="margin-top:26px">
+    <div class="card"><div class="cad"><i style="height:30px"></i><i style="height:30px"></i><i style="height:30px"></i><i style="height:30px"></i></div>
+      <h3 style="margin-top:14px">Week 1–4 · weekly</h3><p style="margin:7px 0 0;font-size:14px;color:var(--muted)">Fresh out. Everything is fragile and the overdose risk window is open.</p></div>
+    <div class="card"><div class="cad"><i style="height:22px"></i><i style="height:22px"></i></div>
+      <h3 style="margin-top:22px">Month 2–6 · monthly</h3><p style="margin:7px 0 0;font-size:14px;color:var(--muted)">Filling prescriptions, attending visits, answering texts.</p></div>
+    <div class="card"><div class="cad"><i style="height:14px"></i></div>
+      <h3 style="margin-top:30px">Month 7–12 · quarterly</h3><p style="margin:7px 0 0;font-size:14px;color:var(--muted)">Established. We get quiet on purpose.</p></div>
+    <div class="card" style="border-color:var(--coral)"><div class="cad"><i style="height:30px;background:var(--coral)"></i><i style="height:30px;background:var(--coral)"></i><i style="height:30px;background:var(--coral)"></i><i style="height:30px;background:var(--coral)"></i></div>
+      <h3 style="margin-top:14px;color:var(--coral)">Any signal breaks</h3><p style="margin:7px 0 0;font-size:14px;color:var(--muted)">Missed fill, ED admit, bounced text, redetermination approaching — cadence snaps back to weekly. Nobody decides.</p></div>
+  </div>
+
+  <div class="g2" style="margin-top:24px">
+    <div class="card">
+      <h3>Silence is the trigger</h3>
+      <p style="margin-top:9px;font-size:14.5px;color:var(--muted)">Most care systems react to events. The people who fall off stop generating events — that is what falling off means. So the check runs top-down and only absence escalates: pharmacy and claims data first, then a one-click ask to the clinic, then a text to him, then a task for the CHW.</p>
+    </div>
+    <div class="card" style="border-color:var(--coral)">
+      <h3 style="color:var(--coral)">The floor we must set</h3>
+      <p style="margin-top:9px;font-size:14.5px;color:var(--muted)">A tapering cadence needs a minimum contact frequency that no confidence score can drop below. Without it, this is a liability story. <b style="color:var(--ink)">What happens to someone the system got quiet about who then dies — how would we know, and whose fault is it?</b> That question needs an answer before launch, not after.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ================= TIERS ================= -->
+<section id="tiers"><div class="wrap">
+  <span class="sn">08 · tiers</span>
+  <h2>Four levels Astria operates at</h2>
+  <p class="lede" style="max-width:68ch;margin-top:14px">Same platform, different depth. Each tier is a real sale, and each one makes the next easier — a county pilot generates the outcome data a health system wants, which generates the volume a state will contract for.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Tier</th><th>Buyer</th><th>What Astria provides</th><th>What they provide</th><th>Proves</th></tr></thead>
+      <tbody>
+        <tr><td><b>T1 · County with nothing</b></td><td>County health dept, sheriff's office, local reentry council</td><td>Full stack: onboarding, matching, CHW staffed by us, telehealth routing where no local provider exists</td><td>Jail access, a room, the upload</td><td>That a programme can exist where none did</td></tr>
+        <tr><td><b>T2 · County with infrastructure</b></td><td>FQHC, existing reentry programme, county</td><td>Onboarding, matching, continuity watch, billing capture. CHW may be theirs or ours</td><td>The clinic of record and the panel</td><td>That we make an existing programme measurably better</td></tr>
+        <tr><td><b>T3 · Health system</b></td><td>Multi-county health system or FQHC network</td><td>Multi-site deployment, cross-county matching, system-level reporting, the Astria ID as the linkage layer</td><td>Panels across several counties, EHR connection</td><td>That continuity holds when people move between counties</td></tr>
+        <tr><td><b>T4 · State</b></td><td>State Medicaid agency or MCO</td><td>Statewide onboarding for every releasing person, demonstration reporting, the ID as state infrastructure</td><td>Claims and eligibility data, the mandate, the money</td><td>That this is infrastructure, not a programme</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:16px;font-size:14.5px;color:var(--muted);max-width:70ch">The CHW is Astria staff at T1 and T2. By T3 and T4 the economics likely push toward their workforce using our tooling — which is a deliberate transition from a services company into a platform company, and it should be planned rather than discovered.</p>
+</div></section>
+
+<!-- ================= CASES ================= -->
+<section id="cases" class="dark"><div class="wrap">
+  <span class="sn">09 · three north carolina counties</span>
+  <h2>What deployment actually looks like</h2>
+  <div class="g3" style="margin-top:26px">
+    <div class="card">
+      <span class="tag no">Tier 1</span>
+      <h3 style="margin-top:12px">Yadkin County</h3>
+      <p style="margin:7px 0 14px;font-size:13px;color:var(--dim)" class="mono">0 FQHC · 0 DSH · 334 sq mi · nearest health centre 17 mi</p>
+      <p style="font-size:14px;color:var(--ice)">One of six NC counties with no health centre and no safety-net hospital. Nothing to match into locally.</p>
+      <ul class="c" style="font-size:13.5px;margin-top:10px">
+        <li>Astria places one CHW covering Yadkin and a neighbouring county</li>
+        <li>Clinic of record is 17 miles away — transport is a line item, not an afterthought</li>
+        <li>Medication continuity routed to a telehealth prescriber where law allows</li>
+        <li>Success here is simply: a programme exists, and people get to the first visit</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag hu">Tier 2</span>
+      <h3 style="margin-top:12px">Alamance County</h3>
+      <p style="margin:7px 0 14px;font-size:13px;color:var(--dim)" class="mono">6 FQHC · 1 DSH · 423 sq mi · Burlington</p>
+      <p style="font-size:14px;color:var(--ice)">Dense safety-net infrastructure and an established FQHC network. The constraint is coordination, not supply.</p>
+      <ul class="c" style="font-size:13.5px;margin-top:10px">
+        <li>Clinic of record already exists — we handle handoff, coverage and the watch</li>
+        <li>Behavioural health integration is realistic here, so layer 2 is live</li>
+        <li>Billing capture is the commercial argument: work already done, not billed</li>
+        <li>This is where outcome data gets generated for the T3 and T4 sale</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag ai">Tier 3 / 4</span>
+      <h3 style="margin-top:12px">Statewide</h3>
+      <p style="margin:7px 0 14px;font-size:13px;color:var(--dim)" class="mono">100 counties · 288 facilities · 18 with no FQHC</p>
+      <p style="font-size:14px;color:var(--ice)">NC has an approved Medicaid reentry demonstration, Healthy Opportunities infrastructure, and NC FIT already operating.</p>
+      <ul class="c" style="font-size:13.5px;margin-top:10px">
+        <li>The Astria ID becomes the linkage layer across counties and systems</li>
+        <li>Demonstration reporting is produced as a byproduct of the work</li>
+        <li>Partner, don't compete: NC FIT and EMPOWER are the care model, we are the infrastructure</li>
+        <li>Cross-county continuity becomes testable — people move, and today nobody follows</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:20px;font-size:13.5px;color:var(--dim)">Extremes worth knowing: <b style="color:#fff">Dare</b> is furthest from a health centre at 30.5 miles in a straight line across water and sound. <b style="color:#fff">Rockingham</b> and <b style="color:#fff">Wilkes</b> are large counties — 565 and 754 square miles — with a hospital but no FQHC, which is a different problem from having nothing at all.</p>
+</div></section>
+
+<!-- ================= IMPLEMENT ================= -->
+<section id="implement"><div class="wrap">
+  <span class="sn">10 · what it takes</span>
+  <h2>Standing up one county</h2>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Week</th><th>What happens</th><th>Who has to say yes</th><th>Blocks on</th></tr></thead>
+      <tbody>
+        <tr><td class="r"><b>0–2</b></td><td>Legal: BAA with the county or its jail health vendor. Patient authorisation form drafted and reviewed.</td><td>County attorney, jail health vendor</td><td>This is the longest pole. Start it first.</td></tr>
+        <tr><td class="r"><b>2–4</b></td><td>Name the clinic of record. Confirm they take Medicaid and will accept these patients onto a panel.</td><td>FQHC or clinic leadership</td><td>Willingness, not capacity. Some will say no.</td></tr>
+        <tr><td class="r"><b>3–5</b></td><td>Identify who does the upload inside the facility, and how they are paid for it.</td><td>Sheriff or jail administrator, health vendor</td><td>Five unpaid minutes is how adoption dies.</td></tr>
+        <tr><td class="r"><b>4–6</b></td><td>Hire and train the CHW. Hire from the population wherever possible.</td><td>Astria</td><td>Finding the right person is slower than the job posting suggests.</td></tr>
+        <tr><td class="r"><b>5–7</b></td><td>Configure: state billing rules, local resource list, the referral network the state already uses.</td><td>Astria</td><td>Rules differ by state. This is library work, not custom build.</td></tr>
+        <tr><td class="r"><b>6–8</b></td><td>Go live: first upload, first enrolment, first encounter, first claim.</td><td>Everyone above</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="g3" style="margin-top:22px">
+    <div class="card"><h3>Minimum viable county</h3><ul class="c" style="margin-top:10px;font-size:14px">
+      <li>One facility willing to upload</li><li>One clinic willing to accept a panel</li><li>One CHW</li><li>A legal route for the data</li></ul>
+      <p style="margin:12px 0 0;font-size:13.5px;color:var(--muted)">Four things. Not the four that a Transitions Clinic needs — no clinical champion, no grant, no new clinic.</p></div>
+    <div class="card"><h3>What we bring</h3><ul class="c" style="margin-top:10px;font-size:14px">
+      <li>The platform and the rules library</li><li>The CHW, at T1 and T2</li><li>Billing capture and demonstration reporting</li><li>The ID and the continuity watch</li></ul></div>
+    <div class="card"><h3>What we never bring</h3><ul class="c" style="margin-top:10px;font-size:14px">
+      <li>A replacement for the existing programme</li><li>A parallel referral network</li><li>Data to probation, parole or the courts</li><li>A promise that the app will fix transport</li></ul></div>
+  </div>
+</div></section>
+
+<!-- ================= UNKNOWNS ================= -->
+<section id="unknowns"><div class="wrap">
+  <span class="sn">11 · what we don't know yet</span>
+  <h2>The list that should make us uncomfortable</h2>
+  <div class="g2" style="margin-top:22px">
+    <div class="card">
+      <h3>Before a pilot</h3>
+      <ul class="c" style="margin-top:12px;font-size:14.5px">
+        <li>Will a county attorney sign a BAA with a startup for this data?</li>
+        <li>Who actually does the upload, and will they keep doing it in month six?</li>
+        <li>Will clinics accept panel attribution for this population — and which ones say no?</li>
+        <li>Does the cadence floor exist, and who is accountable when it fails?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Before scaling</h3>
+      <ul class="c" style="margin-top:12px;font-size:14.5px">
+        <li>What does a pre-release case management encounter actually pay? One state's fee schedule settles it.</li>
+        <li>Does identity resolution hold across booking numbers, Medicaid IDs and MRNs at volume?</li>
+        <li>Can we get pharmacy or claims feeds as a small company, and how long does it take?</li>
+        <li>At what point do CHWs stop being ours — and does the business survive that transition?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="flag">
+    <b>Standing rule</b>
+    <p style="margin:0">Every claim on this page that is not sourced is a hypothesis. The facility data is real and cited. The cadence, the tiers, the implementation timeline and every cost or revenue figure are designed, not validated. Treat them as things to go break.</p>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p style="color:#fff;font-size:15px;font-weight:600;margin-bottom:10px">Astria — care navigation for people leaving incarceration</p>
+  <p>Facility data: NC DSH &amp; FQHC Locations 2022 workbook. County geography: US Census TIGER. Reentry demonstration requirements: CMS SMD #23-003. Working draft for internal discussion — not for external circulation.</p>
+</div></footer>
+
+<div id="tip"></div>
+
+<script id="cty" type="application/json">[["Camden",0,0,6.9],["Clay",0,0,14.9],["Currituck",0,0,19.0],["Perquimans",0,0,9.9],["Tyrrell",0,0,20.9],["Yadkin",0,0,17.1],["Alexander",1,0,0.0],["Alleghany",0,1,21.7],["Ashe",0,1,14.6],["Avery",1,0,0.0],["Carteret",0,1,20.2],["Dare",0,1,30.5],["Davie",0,1,16.8],["Franklin",1,0,0.0],["Gates",1,0,0.0],["Graham",1,0,0.0],["Jones",1,0,0.0],["Lee",0,1,18.5],["McDowell",0,1,17.4],["Moore",0,1,20.2],["Pamlico",1,0,0.0],["Richmond",1,0,0.0],["Rockingham",0,1,22.4],["Stanly",0,1,22.6],["Stokes",0,1,27.1],["Warren",1,0,0.0],["Washington",1,0,0.0],["Wilkes",0,1,24.1],["Yancey",1,0,0.0],["Anson",1,1,0.0],["Beaufort",1,1,0.0],["Cabarrus",1,1,0.0],["Caswell",2,0,0.0],["Cherokee",1,1,0.0],["Chowan",1,1,0.0],["Cleveland",1,1,0.0],["Craven",1,1,0.0],["Greene",2,0,0.0],["Hyde",2,0,0.0],["Lenoir",1,1,0.0],["Lincoln",1,1,0.0],["Martin",1,1,0.0],["Montgomery",1,1,0.0],["Pasquotank",1,1,0.0],["Person",1,1,0.0],["Pitt",1,1,0.0],["Polk",1,1,0.0],["Randolph",1,1,0.0],["Scotland",1,1,0.0],["Union",1,1,0.0],["Vance",1,1,0.0],["Bertie",2,1,0.0],["Bladen",2,1,0.0],["Caldwell",2,1,0.0],["Haywood",2,1,0.0],["Henderson",1,2,0.0],["Hertford",2,1,0.0],["Hoke",2,1,0.0],["Jackson",2,1,0.0],["Johnston",2,1,0.0],["Mitchell",2,1,0.0],["Nash",1,2,0.0],["New Hanover",1,2,0.0],["Northampton",3,0,0.0],["Onslow",1,2,0.0],["Orange",2,1,0.0],["Rowan",2,1,0.0],["Rutherford",2,1,0.0],["Surry",1,2,0.0],["Transylvania",2,1,0.0],["Watauga",1,2,0.0],["Wilson",2,1,0.0],["Burke",2,2,0.0],["Chatham",3,1,0.0],["Davidson",2,2,0.0],["Edgecombe",3,1,0.0],["Granville",1,3,0.0],["Iredell",1,3,0.0],["Macon",2,2,0.0],["Madison",4,0,0.0],["Swain",3,1,0.0],["Brunswick",3,2,0.0],["Buncombe",3,2,0.0],["Columbus",4,1,0.0],["Cumberland",3,2,0.0],["Durham",1,4,0.0],["Gaston",4,1,0.0],["Pender",4,1,0.0],["Forsyth",2,4,0.0],["Guilford",2,4,0.0],["Harnett",5,1,0.0],["Sampson",5,1,0.0],["Wayne",4,2,0.0],["Alamance",6,1,0.0],["Catawba",5,2,0.0],["Halifax",6,1,0.0],["Robeson",6,1,0.0],["Duplin",7,1,0.0],["Wake",5,5,0.0],["Mecklenburg",2,9,0.0]]</script>
+<script>
+(function(){
+  var C = JSON.parse(document.getElementById("cty").textContent);
+  var cs = getComputedStyle(document.documentElement);
+  function v(n){ return cs.getPropertyValue(n).trim(); }
+  var strip = document.getElementById("strip");
+  strip.innerHTML = C.map(function(c,i){
+    var t = c[1]+c[2], col;
+    if(t===0) col=v("--coral");
+    else if(t<=2) col=v("--s2");
+    else if(t<=5) col=v("--s4");
+    else col=v("--s6");
+    return '<span class="cw" style="background:'+col+'" data-i="'+i+'"></span>';
+  }).join("");
+  var tip=document.getElementById("tip");
+  strip.addEventListener("mousemove", function(e){
+    var t=e.target.closest(".cw");
+    if(!t){ tip.style.opacity=0; return; }
+    var c=C[+t.dataset.i];
+    tip.textContent = c[0]+" — "+c[1]+" FQHC, "+c[2]+" DSH"+(c[1]===0?" · nearest FQHC "+c[3]+" mi":"");
+    tip.style.opacity=1;
+    tip.style.left=Math.min(e.clientX+14, innerWidth-280)+"px";
+    tip.style.top=(e.clientY+16)+"px";
+  });
+  strip.addEventListener("mouseleave", function(){ tip.style.opacity=0; });
+})();
+</script>
