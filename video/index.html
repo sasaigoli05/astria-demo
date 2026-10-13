@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Astria — pitch video scenes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0B1322;color:#E8EBF2;font-family:Inter,sans-serif;display:grid;
+  grid-template-columns:330px 1fr;height:100vh;overflow:hidden}
+aside{background:#101B2D;border-right:1px solid #1E2E49;overflow-y:auto;padding:22px 16px}
+h1{font-family:Manrope;font-size:16px;letter-spacing:.2em;margin:4px 10px 4px;color:#fff}
+.meta{font-size:12px;color:#6E7C99;margin:0 10px 18px}
+button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;color:#9AA6BF;
+  font:inherit;font-size:13.5px;text-align:left;padding:11px 12px;border-radius:9px;cursor:pointer}
+button b{font-family:Manrope;color:#4D6490;font-size:12px}
+button span{margin-left:auto;font-size:11.5px;color:#4D6490}
+button:hover{background:#16233A;color:#fff}
+button[aria-current]{background:#16233A;color:#fff}
+button[aria-current] b{color:#E8B85B}
+main{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:22px}
+.frame{width:min(100%,1280px);aspect-ratio:16/9;border-radius:12px;overflow:hidden;
+  box-shadow:0 30px 80px -40px #000;background:#101B2D}
+iframe{width:1920px;height:1080px;border:0;transform-origin:top left}
+.bar{display:flex;align-items:center;gap:14px;font-size:13px;color:#6E7C99}
+.bar button{width:auto;background:#1B2A42;color:#E8EBF2;padding:8px 16px;border-radius:9px}
+.prog{width:320px;height:4px;background:#1E2E49;border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:#4776E6;width:0}
+</style></head><body>
+<aside>
+  <h1>ASTRIA</h1><p class="meta">14 scenes · 3:50 total</p>
+  <button data-s="01-mortality" data-d="14"><b>01</b> Problem — mortality<span>14s</span></button><button data-s="02-chronic" data-d="8"><b>02</b> Problem — chronic conditions<span>8s</span></button><button data-s="03-ownership" data-d="22"><b>03</b> Problem — nobody owns the transition<span>22s</span></button><button data-s="04-astria" data-d="12"><b>04</b> Astria — logo reveal<span>12s</span></button><button data-s="05-argo" data-d="22"><b>05</b> Argo — intake<span>22s</span></button><button data-s="06-id" data-d="18"><b>06</b> The Astria ID<span>18s</span></button><button data-s="07-evidence" data-d="14"><b>07</b> Evidence — the human model<span>14s</span></button><button data-s="08-promoter" data-d="20"><b>08</b> The Care Promoter<span>20s</span></button><button data-s="09-network" data-d="14"><b>09</b> Network — not parallel<span>14s</span></button><button data-s="10-implementation" data-d="20"><b>10</b> How it gets implemented<span>20s</span></button><button data-s="11-outcome" data-d="12"><b>11</b> The pilot outcome<span>12s</span></button><button data-s="12-map" data-d="20"><b>12</b> Proof — North Carolina<span>20s</span></button><button data-s="13-pathway" data-d="16"><b>13</b> The pathway<span>16s</span></button><button data-s="14-close" data-d="18"><b>14</b> Close<span>18s</span></button>
+</aside>
+<main>
+  <div class="frame"><iframe id="f" src="scenes/01-mortality.html"></iframe></div>
+  <div class="bar">
+    <button id="replay">Replay</button>
+    <div class="prog"><i id="p"></i></div>
+    <span id="t">0.0s</span>
+  </div>
+</main>
+<script>
+var f=document.getElementById('f'), prog=document.getElementById('p'), tt=document.getElementById('t');
+var cur=null, dur=0, t0=0, raf;
+function fit(){var w=f.parentElement.clientWidth; f.style.transform='scale('+(w/1920)+')';}
+addEventListener('resize',fit); fit();
+function tick(){
+  var e=(performance.now()-t0)/1000;
+  prog.style.width=Math.min(100,e/dur*100)+'%';
+  tt.textContent=e.toFixed(1)+'s / '+dur+'s';
+  if(e<dur+0.4) raf=requestAnimationFrame(tick);
+}
+function play(btn){
+  document.querySelectorAll('aside button').forEach(function(b){b.removeAttribute('aria-current');});
+  btn.setAttribute('aria-current','true');
+  cur=btn.dataset.s; dur=+btn.dataset.d;
+  f.src='scenes/'+cur+'.html?'+Date.now();
+  cancelAnimationFrame(raf); t0=performance.now(); tick(); fit();
+}
+document.querySelectorAll('aside button').forEach(function(b){
+  b.addEventListener('click',function(){play(b);});
+});
+document.getElementById('replay').addEventListener('click',function(){
+  var b=document.querySelector('aside button[aria-current]')||document.querySelector('aside button');
+  play(b);
+});
+play(document.querySelector('aside button'));
+</script></body></html>

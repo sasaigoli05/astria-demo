@@ -1,0 +1,115 @@
+/* ===========================================================
+   ASTRIA — motion system for the pitch video
+   Brand grammar: nodes appear -> one continuous line draws
+   between them -> the North Star illuminates. 700–1200ms.
+   Calm and subtle. Never sci-fi.
+   =========================================================== */
+
+:root{
+  --midnight:#101B2D; --midnight-2:#1B2A42; --midnight-3:#223250;
+  --northstar:#F7F5EF; --white:#FFFFFF;
+  --celestial:#4776E6; --horizon:#AABEF5; --renewal:#91B5A2;
+  --gold:#E8B85B; --slate:#687386; --slate-2:#9AA6BF;
+  --ink-dark:#E8EBF2;
+  --display:"Manrope",ui-sans-serif,system-ui,sans-serif;
+  --body:"Inter",ui-sans-serif,system-ui,sans-serif;
+  --logo:"Knockout Sumo","Knockout 91 A","Knockout",var(--display);
+  --ease:cubic-bezier(.22,.72,.26,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden}
+body{
+  background:var(--midnight); color:var(--ink-dark);
+  font-family:var(--body); -webkit-font-smoothing:antialiased;
+}
+body.light{background:var(--northstar); color:var(--midnight)}
+
+.stage{position:relative;width:1920px;height:1080px;padding:104px 132px;display:flex;
+  flex-direction:column;justify-content:center}
+.stage.center{align-items:center;text-align:center}
+
+/* ---------- type ---------- */
+.eyebrow{font-family:var(--body);font-size:21px;font-weight:600;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--gold)}
+body.light .eyebrow{color:var(--slate)}
+h1{font-family:var(--display);font-weight:800;font-size:100px;line-height:1.06;
+  letter-spacing:-.035em;color:var(--white)}
+body.light h1{color:var(--midnight)}
+h2{font-family:var(--display);font-weight:700;font-size:68px;line-height:1.12;
+  letter-spacing:-.03em;color:var(--white)}
+body.light h2{color:var(--midnight)}
+.sub{font-size:33px;line-height:1.46;color:var(--slate-2);max-width:30ch}
+body.light .sub{color:var(--slate)}
+.huge{font-family:var(--display);font-weight:800;font-size:300px;line-height:.86;
+  letter-spacing:-.05em;color:var(--white)}
+.huge.gold{color:var(--gold)}
+body.light .huge{color:var(--midnight)}
+.label{font-size:24px;font-weight:600;color:var(--slate-2);letter-spacing:.02em}
+body.light .label{color:var(--slate)}
+.tiny{font-size:19px;color:#6E7C99;letter-spacing:.04em}
+
+/* ---------- entrance primitives ---------- */
+.fx{opacity:0;animation:rise 1000ms var(--ease) forwards;animation-delay:var(--d,0ms)}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+.fade{opacity:0;animation:fade 1100ms var(--ease) forwards;animation-delay:var(--d,0ms)}
+@keyframes fade{to{opacity:1}}
+
+.pop{opacity:0;animation:pop 900ms var(--ease) forwards;animation-delay:var(--d,0ms)}
+@keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+
+.out{animation:out 900ms var(--ease) forwards;animation-delay:var(--d,0ms)}
+@keyframes out{to{opacity:0;transform:translateY(-16px)}}
+
+/* line draws itself */
+.draw{stroke-dasharray:var(--len,1200);stroke-dashoffset:var(--len,1200);
+  animation:draw var(--dur,1200ms) var(--ease) forwards;animation-delay:var(--d,0ms)}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* the north star illuminating */
+.bloom{opacity:0;transform-origin:center;
+  animation:bloom 1100ms var(--ease) forwards;animation-delay:var(--d,0ms)}
+@keyframes bloom{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+
+/* a dot travelling a path */
+.travel{animation:travel var(--dur,2600ms) var(--ease) forwards;animation-delay:var(--d,0ms)}
+@keyframes travel{from{transform:translateX(0)}to{transform:translateX(var(--to,600px))}}
+
+.drop{animation:drop 1100ms cubic-bezier(.5,0,.75,0) forwards;animation-delay:var(--d,0ms)}
+@keyframes drop{to{transform:translateY(190px);opacity:0}}
+
+.grow{transform-origin:left center;transform:scaleX(0);
+  animation:grow var(--dur,1100ms) var(--ease) forwards;animation-delay:var(--d,0ms)}
+@keyframes grow{to{transform:scaleX(1)}}
+
+.riseBar{transform-origin:bottom center;transform:scaleY(0);
+  animation:riseBar var(--dur,1200ms) var(--ease) forwards;animation-delay:var(--d,0ms)}
+@keyframes riseBar{to{transform:scaleY(1)}}
+
+/* ---------- components ---------- */
+.node{width:22px;height:22px;border-radius:50%;background:var(--horizon);position:absolute}
+.node.sm{width:16px;height:16px}
+.node.blue{background:var(--celestial)}
+.node.green{background:var(--renewal)}
+
+.chip{display:inline-flex;align-items:center;gap:14px;padding:22px 34px;border-radius:18px;
+  background:var(--midnight-2);font-size:28px;font-weight:600;color:var(--ink-dark)}
+body.light .chip{background:var(--white);color:var(--midnight);border:1px solid #E3DFD3}
+.chip .dot{width:14px;height:14px;border-radius:50%;background:var(--celestial);flex:none}
+.chip.green .dot{background:var(--renewal)}
+.chip.gold .dot{background:var(--gold)}
+
+.card{background:var(--midnight-2);border-radius:22px;padding:38px 40px}
+body.light .card{background:var(--white);border:1px solid #E3DFD3}
+
+.rail{position:relative;height:6px;background:var(--midnight-3);border-radius:4px}
+.rail .fill{position:absolute;inset:0;background:var(--horizon);border-radius:4px}
+.rail .stop{position:absolute;top:-13px;width:5px;height:32px;background:#C9705A;border-radius:3px}
+
+.logo{display:block}
+.wordmark{font-family:var(--logo);font-weight:700;letter-spacing:.16em;color:var(--white)}
+
+/* snapshot mode: collapse every delay so one frame shows the composed scene */
+html.snap *,html.snap *::before,html.snap *::after{
+  animation-delay:0ms !important; animation-duration:1ms !important}

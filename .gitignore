@@ -19,3 +19,7 @@ EHR code/*.md
 # Internal research — kept local, not published
 Research/
 ASTRIA-PITCH-CONTEXT.md
+
+# Video build artefacts
+video/out/
+video/.snap/
